@@ -15,9 +15,9 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TextBox Grid.Column="0" Grid.Row="0" x:Name="uiLogin" Text="Test" HorizontalAlignment="Center" />
-        <PasswordBox Grid.Column="0" Grid.Row="1" x:Name="uiPass" Password="password" HorizontalAlignment="Center"/>
-        <Button Grid.Column="0" Grid.Row="2" Name="loginBtn" Content="Login"  IsDefault="True" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBox Margin="1" Grid.Column="0" HorizontalContentAlignment="Center" Grid.Row="0" x:Name="uiLogin" Text="Test" />
+        <PasswordBox Margin="1" Grid.Column="0" HorizontalContentAlignment="Center" Grid.Row="1" x:Name="uiPass" Password="password"/>
+        <Button Margin="1" Grid.Column="0" Grid.Row="2" Name="loginBtn" Content="Login"  IsDefault="True" VerticalAlignment="Center"/>
 
     </Grid>
 </Window>

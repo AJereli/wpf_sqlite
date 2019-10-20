@@ -12,7 +12,7 @@ using System.IO;
 
 namespace WPF_SQL_App
 {
-    class DBProvider: IDBProvider
+    class DBProvider : IDBProvider
     {
         //TODO: this settings must be stored on environment or CI files
 
@@ -35,18 +35,19 @@ namespace WPF_SQL_App
                 try
                 {
                     connection.Open();
-                    
+
                     var query = "SELECT * FROM user WHERE username = @username AND password = @password";
                     SQLiteCommand command = new SQLiteCommand(query, connection);
 
                     command.Parameters.AddWithValue("@username", username);
                     command.Parameters.AddWithValue("@password", password);
 
-                    using (var reader =  command.ExecuteReader())
+                    using (var reader = command.ExecuteReader())
                     {
                         if (reader.Read())
                         {
-                            return new UserModel {
+                            return new UserModel
+                            {
                                 Id = (long)reader["id"],
                                 Username = (string)reader["username"],
                                 Password = (string)reader["password"]
@@ -54,14 +55,14 @@ namespace WPF_SQL_App
                         }
                     }
 
-                      
+
                 }
                 finally
                 {
-                    
+
                     connection.Close();
                 }
-              
+
             }
 
             return null;
@@ -78,7 +79,7 @@ namespace WPF_SQL_App
                 {
                     connection.Open();
 
-                    var query = "SELECT * FROM box JOIN user_box ON user_box.user_id = @id ";
+                    var query = "SELECT * FROM box JOIN user_box ON user_box.box_id = box.id WHERE user_box.user_id = @id ORDER BY box.title;";
                     SQLiteCommand command = new SQLiteCommand(query, connection);
 
                     command.Parameters.AddWithValue("@id", userId);
@@ -109,5 +110,112 @@ namespace WPF_SQL_App
             return results;
         }
 
+
+
+
+        public void AddBox(string boxName, long userId)
+        {
+
+            using (var connection = new SQLiteConnection(SQLiteConnectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        try
+                        {
+                            var insertBoxQuery = "INSERT INTO box (title) VALUES (@title)";
+
+                            var insertedBoxId = -1L;
+                            var insertedRelationsId = -1L;
+
+                            using (var command = new SQLiteCommand(insertBoxQuery, connection))
+                            {
+                                command.Parameters.AddWithValue("@title", boxName);
+                                var rowAffected = command.ExecuteNonQuery();
+                                insertedBoxId = connection.LastInsertRowId;
+                            }
+
+                            if (insertedBoxId == -1L)
+                            {
+                                transaction.Rollback();
+                                return;
+                            }
+
+                            var insertRelationsQuery = "INSERT INTO user_box (user_id, box_id) VALUES (@uid, @bid)";
+
+                            using (var command = new SQLiteCommand(insertRelationsQuery, connection))
+                            {
+                                command.Parameters.AddWithValue("@uid", userId);
+                                command.Parameters.AddWithValue("@bid", insertedBoxId);
+                                var rowAffected = command.ExecuteNonQuery();
+                                insertedRelationsId = connection.LastInsertRowId;
+
+                            }
+                            if (insertedRelationsId == -1L)
+                            {
+                                transaction.Rollback();
+                                return;
+                            }
+                            transaction.Commit();
+
+                        }
+                        catch
+                        {
+                            transaction.Rollback();
+                        }
+
+
+
+                    }
+                }
+                finally
+                {
+                    connection.Close();
+                }
+
+            }
+        }
+
+        public void CountCredentialsInBaskets(long userId)
+        {
+            var query = @"SELECT box.id, box.title, COUNT(credentials.id) AS credentials_count 
+                        FROM box 
+                        JOIN user_box ON user_box.box_id = box.id 
+                        JOIN credentials ON credentials.box_id = box.id 
+                        WHERE user_box.user_id = @id \
+                        GROUP BY box.id";
+
+
+
+        }
+
+
+        public int CountAvailableForMe(long userId)
+        {
+            var result = 0;
+            using (var connection = new SQLiteConnection(SQLiteConnectionString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    var query = "SELECT COUNT(*) FROM box JOIN user_box ON user_box.box_id = box.id WHERE user_box.user_id = @id;";
+                    using (var command = new SQLiteCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@id", userId);
+                        result = Convert.ToInt32((long)command.ExecuteScalar());
+                    }
+                    
+
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+            return result;
+        }
     }
 }

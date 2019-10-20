@@ -50,7 +50,7 @@ namespace WPF_SQL_App
                 AppContext.Current.CurrentUser = user;
                 var boxesWIns = new BoxesWindow();
                 boxesWIns.Show();
-
+                this.Close();
             }
             else
             {

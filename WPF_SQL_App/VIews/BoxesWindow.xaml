@@ -20,6 +20,7 @@
         <TextBox x:Name="uiBoxName" HorizontalAlignment="Left" Height="23" Margin="99,14,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="131"/>
         <Label Content="Box Title:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.868,-0.154" Width="65"/>
         <Button x:Name="uiAddBoxBtn" Content="Add" HorizontalAlignment="Left" Margin="261,16,0,0" VerticalAlignment="Top" Width="76"/>
+        <Label Name="uiAvailableLable" Content="Available for me:" HorizontalAlignment="Left" Margin="644,13,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.868,-0.154" Width="138"/>
 
     </Grid>
 </Window>

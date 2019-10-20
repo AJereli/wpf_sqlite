@@ -11,5 +11,7 @@ namespace WPF_SQL_App
     {
         Task<UserModel> Login(string username, string password);
         IEnumerable<BoxModel> GetAllBoxes(long userId);
+        void AddBox(string boxName, long userId);
+        int CountAvailableForMe(long userId);
     }
 }

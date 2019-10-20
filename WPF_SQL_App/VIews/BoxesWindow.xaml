@@ -1,0 +1,25 @@
+﻿<Window x:Class="WPF_SQL_App.VIews.BoxesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF_SQL_App.VIews"
+        mc:Ignorable="d"
+        Title="BoxesWindow" Height="550" Width="800">
+    <Grid>
+        <ListBox Margin="0, 150, 0 ,0" x:Name="boxesList" >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="5">
+                        <Label Content="Box Title:"/>
+                        <TextBlock FontSize="16" Text="{Binding Path=Title}" HorizontalAlignment="Center" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <TextBox x:Name="uiBoxName" HorizontalAlignment="Left" Height="23" Margin="99,14,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="131"/>
+        <Label Content="Box Title:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.868,-0.154" Width="65"/>
+        <Button x:Name="uiAddBoxBtn" Content="Add" HorizontalAlignment="Left" Margin="261,16,0,0" VerticalAlignment="Top" Width="76"/>
+
+    </Grid>
+</Window>
